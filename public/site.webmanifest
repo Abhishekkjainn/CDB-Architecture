@@ -1,0 +1,8 @@
+{
+  "name": "CDB Architecture",
+  "short_name": "CDB",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }],
+  "theme_color": "#f5f3ef",
+  "background_color": "#f5f3ef",
+  "display": "standalone"
+}
