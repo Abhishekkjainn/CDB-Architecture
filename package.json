@@ -5,12 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/postbuild.mjs",
+    "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
-    "lint": "oxlint",
-    "smoke": "node scripts/smoke.mjs",
-    "check": "tsc -b && oxlint && node scripts/smoke.mjs"
+    "lint": "oxlint"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -30,8 +28,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "oxlint": "^1.89.0",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5",
-    "vite-prerender-plugin": "^0.5.14"
+    "vite": "^8.3.5"
   },
   "engines": {
     "node": ">=22"
