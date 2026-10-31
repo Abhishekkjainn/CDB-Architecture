@@ -3,6 +3,8 @@
  *   1. Write dist/sitemap.xml and dist/robots.txt. Routes are read from the
  *      prerendered output, so adding a project to the content config is all it
  *      takes to get it indexed.
+ *   0. Copy the prerendered 404 to dist/404.html, which is the filename static
+ *      hosts look for when nothing matches a request.
  *   2. Delete orphaned JavaScript chunks. The prerender entry pulls in
  *      react-dom/server and the plugin's HTML parser, which are build-time only
  *      — roughly 400 kB that nothing ever requests but which would otherwise be
@@ -136,3 +138,22 @@ function pruneOrphanChunks() {
 }
 
 pruneOrphanChunks()
+
+
+/* ---------------------------------------------------------------------------
+ * The prerenderer writes the not-found page to /404/index.html. Static hosts
+ * (Vercel and Netlify both) serve `404.html` from the output root for an
+ * unmatched request, so it needs to exist under that name too — otherwise an
+ * unknown URL gets the host's own error page instead of ours.
+ * ------------------------------------------------------------------------- */
+function writeNotFoundPage() {
+  try {
+    const page = readFileSync(join(dist, '404', 'index.html'), 'utf8')
+    writeFileSync(join(dist, '404.html'), page)
+    console.log('404.html written')
+  } catch {
+    console.warn('no prerendered /404 page found; skipping 404.html')
+  }
+}
+
+writeNotFoundPage()

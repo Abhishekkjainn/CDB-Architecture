@@ -130,14 +130,15 @@ async function sendEmail(summary: string, data: Record<string, string>) {
   return { sent: 'email' }
 }
 
-export default async function handler(req: Request): Promise<Response> {
-  if (req.method !== 'POST') {
-    return Response.json({ error: 'Method not allowed' }, { status: 405 })
-  }
-
+/**
+ * Vercel's Web-standard signature. A bare default-exported function is treated
+ * as the legacy Node `(req, res)` handler instead, which would hand us an
+ * IncomingMessage with no `.json()` and fail on every request.
+ */
+async function handle(request: Request): Promise<Response> {
   let payload: Payload
   try {
-    payload = (await req.json()) as Payload
+    payload = (await request.json()) as Payload
   } catch {
     return Response.json({ error: 'Invalid JSON' }, { status: 400 })
   }
@@ -185,4 +186,17 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   return Response.json({ ok: true })
+}
+
+export async function POST(request: Request) {
+  return handle(request)
+}
+
+export default {
+  async fetch(request: Request) {
+    if (request.method !== 'POST') {
+      return Response.json({ error: 'Method not allowed' }, { status: 405 })
+    }
+    return handle(request)
+  },
 }
